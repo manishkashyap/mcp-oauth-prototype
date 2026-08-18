@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>WebEngage MCP Prototype - Authorize</title>
+  <style>
+    body { font-family: -apple-system, sans-serif; max-width: 480px; margin: 60px auto; padding: 0 16px; color: #222; }
+    h1 { font-size: 20px; line-height: 1.4; }
+    .app { font-weight: 600; }
+    label { display: block; margin-top: 16px; font-size: 14px; }
+    input, select { width: 100%; padding: 8px; margin-top: 4px; box-sizing: border-box; font-size: 14px; }
+    ul { margin-top: 4px; padding-left: 20px; }
+    button { margin-top: 24px; padding: 10px 18px; font-size: 14px; margin-right: 8px; cursor: pointer; }
+    .approve { background: #276274; color: white; border: none; border-radius: 4px; }
+    .deny { background: #eee; border: 1px solid #ccc; border-radius: 4px; }
+    .note { font-size: 12px; color: #777; margin-top: 32px; }
+  </style>
+</head>
+<body>
+  <h1><span class="app" th:text="${clientName}">Client</span> wants to access WebEngage (prototype)</h1>
+  <p>This is a fake login/consent screen for OAuth protocol testing - not real WebEngage authentication.</p>
+  <form method="post" th:action="@{/oauth2/authorize/approve}">
+    <input type="hidden" name="requestId" th:value="${requestId}" />
+    <label>Fake WebEngage username
+      <input type="text" name="username" placeholder="test-user@webengage.com" />
+    </label>
+    <label>Publisher / workspace
+      <select name="publisherId">
+        <option th:each="p : ${publishers}" th:value="${p}" th:text="${p}"></option>
+      </select>
+    </label>
+    <label>Requested scopes
+      <ul>
+        <li th:each="s : ${scopes}" th:text="${s}"></li>
+      </ul>
+    </label>
+    <button class="approve" type="submit" name="decision" value="approve">Approve</button>
+    <button class="deny" type="submit" name="decision" value="deny">Deny</button>
+  </form>
+  <p class="note">webengage-mcp-oauth-prototype &mdash; test harness only, not real WebEngage login</p>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Authorization error</title>
+  <style>
+    body { font-family: -apple-system, sans-serif; max-width: 480px; margin: 60px auto; padding: 0 16px; color: #222; }
+    .err { color: #b5433c; font-weight: 600; font-family: ui-monospace, monospace; }
+    pre { background: #f5f5f5; padding: 12px; border-radius: 4px; white-space: pre-wrap; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <h1>Authorization request failed</h1>
+  <p class="err" th:text="${error}">error</p>
+  <pre th:text="${errorDescription}">description</pre>
+  <p>No redirect was issued for this failure &mdash; deliberately, since the redirect_uri or client
+     could not be trusted yet.</p>
+</body>
+</html>

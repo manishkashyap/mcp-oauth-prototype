@@ -1,0 +1,48 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: webengage-mcp-oauth-prototype
+  ai:
+    mcp:
+      server:
+        name: webengage-mcp-prototype
+        version: 0.1.0
+        type: SYNC
+        protocol: STREAMABLE
+        instructions: "Prototype WebEngage MCP server used to validate OAuth 2.1 behavior against real Claude and ChatGPT connectors."
+        streamable-http:
+          mcp-endpoint: /mcp
+
+# Everything below is this prototype's own config, not a Spring Boot/Spring AI namespace.
+webengage:
+  oauth:
+    # Public base URL this app is reachable at once deployed. MUST be the real HTTPS URL
+    # after deployment (e.g. https://webengage-mcp-proto.onrender.com) - Claude and ChatGPT
+    # will not accept http:// or a non-canonical form for the resource/issuer values.
+    issuer: ${OAUTH_ISSUER:http://localhost:8080}
+    mcp-resource: ${MCP_RESOURCE:http://localhost:8080/mcp}
+    access-token-ttl-seconds: 3600
+    refresh-token-enabled: true
+    # Pre-registered clients for testing the MANUAL client_id/secret path (paste these into
+    # each platform's "Advanced settings" when adding the connector). Leave these fields
+    # blank in the connector setup instead if you want to force the CIMD path.
+    pre-registered-clients:
+      - client-id: claude-test-client
+        client-secret: ${CLAUDE_CLIENT_SECRET:claude-test-secret}
+        # Confirmed exact value from Anthropic's docs - do not change.
+        redirect-uri: https://claude.ai/api/mcp/auth_callback
+        name: "Claude (manual test client)"
+      - client-id: chatgpt-test-client
+        client-secret: ${CHATGPT_CLIENT_SECRET:chatgpt-test-secret}
+        # NOT independently confirmed from official docs as of this writing - when you add
+        # the connector in ChatGPT's Developer Mode UI, check what redirect URI it expects
+        # (or what it shows you to whitelist) and update this value before testing the
+        # manual-client path against ChatGPT. The CIMD path below doesn't depend on this.
+        redirect-uri: "PLACEHOLDER_FILL_IN_FROM_CHATGPT_ADVANCED_SETTINGS"
+        name: "ChatGPT (manual test client)"
+
+logging:
+  level:
+    com.webengage.mcpproto: DEBUG
